@@ -15,7 +15,7 @@ function App({apiKey}: {apiKey:string}) {
   console.log(apiKey, "api key 🔥")
 
   return (
-      <div className="relative">
+      <div className="relative isolate">
           <ChatPane
               apiKey={apiKey}
               appearance={defaultAppearance}
