@@ -6,5 +6,10 @@ export default defineConfig({
   plugins: [react(), cssInjectedByJsPlugin()],
   build: {
     cssCodeSplit: false,
+    rollupOptions: {
+      input: {
+        app: "./src/main.tsx",
+      }
+    }
   }
 })

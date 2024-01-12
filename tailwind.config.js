@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  prefix: 'dumble-',
+  important: true,
   darkMode: 'class',
   content: [
     "./index.html",

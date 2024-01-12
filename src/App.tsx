@@ -7,7 +7,7 @@ const defaultAppearance: Appearance = {
   title: "Hello there",
   description: "Start chatting with me about this company",
   icon: "",
-  textColor: "",
+  textColor: "#ffff",
 
 }
 function App({apiKey}: {apiKey:string}) {

@@ -23,23 +23,22 @@ export const ChatPane:FC<ChatPaneProps> = ({appearance, show}) => {
    }, [chats])
   return (
       <div
-          className={` absolute  bg-white dark:bg-slate-800 border-slate-400 rounded-lg w-mobile md:w-[400px] bottom-[50px] right-[-20px] md:right-[50px] `}
+          className={` absolute border  bg-white dark:bg-slate-800 border-slate-400 rounded-lg w-mobile md:w-[400px] bottom-[50px] right-[-20px] md:right-[50px] `}
           style={{ display: show ? 'block' : 'none' }}
       >
           <div
               className={`flex flex-col gap-2 justify-center  rounded-tr-lg rounded-tl-lg content-center py-5 px-8`}
-              style={{ backgroundColor: appearance.brandColor }}
+              style={{ backgroundColor: appearance.brandColor, color: appearance.textColor }}
           >
               <h3
-                  className={`text-3xl text-center font-bold text-[${
-                      appearance.textColor || '#ffff'
-                  }]`}
+                  className={`text-3xl text-center font-bold `}
+                  style={{color: appearance.textColor}}
               >
                   {appearance.title}
               </h3>
               <p className="text-base text-center">{appearance.description}</p>
           </div>
-          <div className=" flex flex-col  relative   rounded-b-lg ">
+          <div className=" flex flex-col  relative   rounded-b-lg pt-5">
               <div className="flex flex-col h-[356px] overflow-y-auto overflow-x-hidden px-4" ref={containerRef}>
                   {chats.map((chat, id) => (
                       <ChatBubble
@@ -64,7 +63,7 @@ export const ChatPane:FC<ChatPaneProps> = ({appearance, show}) => {
                   <button
                       onClick={sendChatMessage}
                       className={`absolute right-5 py-1 px-4 border-1`}
-                      style={{ backgroundColor: appearance.brandColor }}
+                      style={{ backgroundColor: appearance.brandColor, color: appearance.textColor }}
                   >
                       Send
                   </button>
