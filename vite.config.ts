@@ -1,15 +1,19 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), cssInjectedByJsPlugin()],
-  build: {
-    cssCodeSplit: false,
-    rollupOptions: {
-      input: {
-        app: "./src/main.tsx",
+export default ({ mode}) => {
+  // @ts-ignore;
+  process.env = {...process.env, ... loadEnv(mode, process.cwd())}
+  return defineConfig({
+    plugins: [react(), cssInjectedByJsPlugin()],
+    build: {
+      cssCodeSplit: false,
+      rollupOptions: {
+        input: {
+          app: "./src/main.tsx",
+        }
       }
     }
-  }
-})
+  })
+}
