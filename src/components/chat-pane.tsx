@@ -162,7 +162,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
                     />
                     <button
                         onClick={sendChatMessage}
-                        className={`dmd-absolute dmd-right-5 dmd-py-1 dmd-px-4 dmd-border-1`}
+                        className={`dmd-absolute dmd-right-5 dmd-rounded-md dmd-py-1 dmd-px-4 dmd-border-1`}
                         style={{
                             backgroundColor: appearance.brandColor,
                             color: appearance.textColor,
