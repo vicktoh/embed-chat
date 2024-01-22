@@ -11,13 +11,13 @@ type ChatBubble = {
 export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
   return (
       <div
-          className={`flex flex-row gap-2 my-2  ${
-              role === 'assistant' ? '' : 'justify-end'
+          className={`dmd-flex dmd-flex-row dmd-gap-2 dmd-my-2  ${
+              role === 'assistant' ? '' : 'dmd-justify-end'
           }`}
       >
           {role === 'assistant' ? (
               <div
-                  className="w-10 h-10 self-start flex justify-center items-center rounded-full"
+                  className="dmd-w-10 dmd-h-10 dmd-self-start dmd-flex dmd-justify-center dmd-items-center dmd-rounded-full"
                   style={{
                       backgroundColor: appearance?.brandColor,
                       color: appearance.textColor,
@@ -27,7 +27,7 @@ export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
                   appearance.icon !== 'square' ? (
                       <img
                           src={appearance.icon}
-                          className="w-10 h-10 rounded-full"
+                          className="dmd-w-10 dmd-h-10 dmd-rounded-full"
                       />
                   ) : (
                       <svg
@@ -53,10 +53,10 @@ export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
               </div>
           ) : null}
           <div
-              className={`flex flex-row py-2 px-3  gap-2 max-w-[70%] ${
+              className={`dmd-flex dmd-flex-row dmd-py-2 dmd-px-3  dmd-gap-2 dmd-max-w-[70%] ${
                   role === 'assistant'
-                      ? 'rounded-tl-md rounded-br-md rounded-tr-md text-black bg-slate-300 dark:bg-[#4c5152] dark:text-white'
-                      : 'rounded-tl-md rounded-bl-md rounded-tr-md self-end '
+                      ? 'dmd-rounded-tl-md dmd-rounded-br-md dmd-rounded-tr-md dmd-text-black dmd-bg-slate-300 dark:dmd-bg-[#4c5152] dark:dmd-text-white'
+                      : 'dmd-rounded-tl-md dmd-rounded-bl-md dmd-rounded-tr-md dmd-self-end '
               }`}
               style={{
                   backgroundColor:
@@ -64,7 +64,7 @@ export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
                   color: appearance.textColor,
               }}
           >
-              <p className="text-sm">{text}</p>
+              <p className="dmd-text-sm">{text}</p>
           </div>
       </div>
   );

@@ -6,10 +6,10 @@ type LoadingBubbleProps = {
 export const LoadingBubble:FC<LoadingBubbleProps> = ({appearance}) => {
   return (
    <div
-   className={`flex flex-row gap-2 my-2 max-w-[80%]`}
+   className={`dmd-flex dmd-flex-row dmd-gap-2 dmd-my-2 dmd-max-w-[80%]`}
 >
 <div
-           className="w-8 h-8 self-start flex justify-center items-center rounded-full"
+           className="dmd-w-8 dmd-h-8 dmd-self-start dmd-flex dmd-justify-center dmd-items-center dmd-rounded-full"
            style={{ backgroundColor: appearance?.brandColor }}
        >
            <svg
@@ -31,11 +31,11 @@ export const LoadingBubble:FC<LoadingBubbleProps> = ({appearance}) => {
            </svg>
        </div>
    <div
-       className={`flex flex-row py-2 px-3  gap-2 rounded-tl-md rounded-br-md rounded-tr-md text-black bg-orange-100 dark:bg-[#4c5152] dark:text-white`}
+       className={`dmd-flex dmd-flex-row dmd-py-2 dmd-px-3  dmd-gap-2 dmd-rounded-tl-md dmd-rounded-br-md dmd-rounded-tr-md dmd-text-black dmd-bg-orange-100 dark:dmd-bg-[#4c5152] dark:dmd-text-white`}
    >
-       <div className="w-3 h-3 rounded-full animate-pulse" style={{backgroundColor: appearance.brandColor}}></div>
-       <div className="w-3 h-3 rounded-full animate-pulse-fast" style={{backgroundColor: appearance.brandColor}}></div>
-       <div className="w-3 h-3 rounded-full animate-pulse-medium" style={{backgroundColor: appearance.brandColor}}></div>
+       <div className="dmd-w-3 dmd-h-3 dmd-rounded-full dmd-animate-pulse" style={{backgroundColor: appearance.brandColor}}></div>
+       <div className="dmd-w-3 dmd-h-3 dmd-rounded-full dmd-animate-pulse-fast" style={{backgroundColor: appearance.brandColor}}></div>
+       <div className="dmd-w-3 dmd-h-3 dmd-rounded-full dmd-animate-pulse-medium" style={{backgroundColor: appearance.brandColor}}></div>
    </div>
 </div>
   )

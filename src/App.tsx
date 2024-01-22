@@ -18,7 +18,7 @@ function App({apiKey}: {apiKey:string}) {
    
      return appearance ? (
          <div
-             className={`relative ${appearance.theme === 'dark' ? 'dark' : ''}`}
+             className={`dmd-relative ${appearance.theme === 'dark' ? 'dark' : ''}`}
          >
              <ChatPane apiKey={apiKey} appearance={appearance} show={show} />
              <div
@@ -26,7 +26,7 @@ function App({apiKey}: {apiKey:string}) {
                      backgroundColor: appearance.brandColor,
                      color: appearance.textColor,
                  }}
-                 className="w-[56px] h-[56px] rounded-full flex items-center justify-center "
+                 className="dmd-w-[56px] dmd-h-[56px] dmd-rounded-full dmd-flex dmd-items-center dmd-justify-center "
                  onClick={() => setShow((val) => !val)}
              >
                  {appearance.icon === 'circle' ||
@@ -35,7 +35,7 @@ function App({apiKey}: {apiKey:string}) {
                  ) : (
                      <img
                          src={appearance.icon}
-                         className="w-10 h-10 rounded-full"
+                         className="dmd-w-10 dmd-h-10 dmd-rounded-full"
                      />
                  )}
              </div>
