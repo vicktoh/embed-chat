@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       width: {
-        mobile: "calc(100vw - 40px)"
+        mobile: "calc(100vw - 10px)"
       }, 
       animation: {
         'pulse-fast': 'pulse 0.5s 100ms cubic-bezier(0.4, 0, 0.6, 1) infinite',

@@ -7,8 +7,9 @@ type ChatPaneProps = {
     apiKey: string;
     appearance: Appearance;
     show: boolean;
+    onToggleShow: ()=> void;
 };
-export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
+export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggleShow }) => {
     const [chat, setChat] = useState<Chat>();
     const [fetchingChat, setFetchingChat] = useState<boolean>();
     const [chats, setChats] = useState<ThreadMessage[]>([]);
@@ -101,11 +102,13 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
     }, [chat, fetchChat]);
     return (
         <div
-            className={` dmd-absolute dmd-z-auto dmd-border  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg dmd-w-mobile md:dmd-w-[400px] dmd-bottom-[50px] dmd-right-[-20px] md:dmd-right-[50px] `}
+            className={`dmd-fixed dmd-z-auto dmd-border dmd-left-[10px] md:dmd-left-[auto]  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg  md:dmd-w-[400px] dmd-bottom-[10px] md:dmd-bottom-[70px] dmd-right-[10px] md:dmd-right-[120px] dmd-top-2 md:dmd-top-[auto] md:dmd-min-h-[75vh]`}
             style={{ display: show ? 'block' : 'none' }}
         >
+            <div className="dmd-h-full md:dmd-min-h-[75vh]  dmd-relative">
+
             <div
-                className={`dmd-flex dmd-flex-col dmd-gap-2 dmd-justify-center  dmd-rounded-tr-lg dmd-rounded-tl-lg dmd-content-center dmd-py-5 dmd-px-8`}
+                className={`dmd-flex dmd-flex-col  dmd-gap-2 dmd-justify-center  dmd-rounded-tr-lg dmd-rounded-tl-lg dmd-content-center dmd-py-5 dmd-px-8 dmd-relative`}
                 style={{
                     backgroundColor: appearance.brandColor,
                     color: appearance.textColor,
@@ -133,10 +136,13 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
                         {fetchingChat ? 'Please wait...' : 'New Chat'}
                     </button>
                 </div>
+                <button className="md:dmd-hidden dmd-text-black dmd-border-black dmd-flex dmd-items-center dmd-justify-center dmd-rounded-full dmd-absolute dmd-right-3 dmd-top-3 dmd-w-5 dmd-h-5 dmd-border" onClick={onToggleShow}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
             </div>
-            <div className=" dmd-flex dmd-flex-col  dmd-relative   dmd-rounded-b-lg dmd-pt-5">
+            <div className=" dmd-flex dmd-flex-col dmd-flex-1  dmd-relative   dmd-rounded-b-lg dmd-pt-5">
                 <div
-                    className="dmd-flex dmd-flex-col dmd-h-[356px] dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4"
+                    className="dmd-flex dmd-flex-col dmd-h-[calc(100vh-90px-158px-18px)] md:dmd-h-[calc(75vh-90px-158px)]  dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4 dmd-pb-5"
                     ref={containerRef}
                 >
                     {chats.map((chat, id) => (
@@ -151,8 +157,12 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
                     {loading && <LoadingBubble appearance={appearance} />}
                     <div ref={endRef}></div>
                 </div>
+                
 
-                <div className="dmd-flex dmd-bg-white dark:dmd-bg-slate-800 dmd-flex-row dmd-items-center dmd-relative dmd-py-5 dmd-px-4 dmd-rounded-b-lg">
+            </div>
+            <div className="dmd-absolute dmd-bottom-0 dmd-right-0 dmd-left-0">
+
+                <div className="dmd-flex  dmd-bg-white dark:dmd-bg-slate-800 dmd-flex-row dmd-items-center dmd-relative dmd-py-5 dmd-px-4 dmd-rounded-b-lg dmd-mt-auto">
                     <input
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
@@ -171,7 +181,9 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey }) => {
                         Send
                     </button>
                 </div>
+                </div>
             </div>
+
         </div>
     );
 };
