@@ -20,6 +20,8 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
 
     const sendChatMessage = async () => {
         if (!userInput.trim()) return;
+        const input = userInput.trim();
+        setUserInput('');
         try {
             setLoading(true);
             setChats((value) => [
@@ -28,7 +30,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                     content: [
                         {
                             type: 'text',
-                            text: { value: userInput, annotations: [] },
+                            text: { value: input, annotations: [] },
                         },
                     ],
                     role: 'user',
@@ -39,11 +41,11 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
 
                 console.log(chat, 'Chat retrived true');
                 setChat(chat);
-                const chats = await sendMessage(chat.id, userInput, apiKey);
+                const chats = await sendMessage(chat.id, input, apiKey);
                 setChats(chats.reverse());
                 return;
             }
-            const chats = await sendMessage(chat.id, userInput, apiKey);
+            const chats = await sendMessage(chat.id, input, apiKey);
             setChats(chats.reverse());
         } catch (error) {
             console.log(error, 'error ❌');
@@ -52,11 +54,13 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
             setLoading(false);
         }
     };
+    console.log(chats, "🍅")
 
     const handleOnKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
         if(event.key === 'Enter') {
             console.log("Enter Pressed");
             sendChatMessage();
+            
         }
     }
     useEffect(() => {
@@ -142,7 +146,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
             </div>
             <div className=" dmd-flex dmd-flex-col dmd-flex-1  dmd-relative   dmd-rounded-b-lg dmd-pt-5">
                 <div
-                    className="dmd-flex dmd-flex-col dmd-h-[calc(100vh-90px-158px-18px)] md:dmd-h-[calc(75vh-90px-158px)]  dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4 dmd-pb-5"
+                    className="dmd-flex dmd-flex-col dmd-h-[calc(100vh-90px-158px-18px)] md:dmd-h-[calc(75vh-90px-158px)]  dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4 dmd-pb-10"
                     ref={containerRef}
                 >
                     {chats.map((chat, id) => (

@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Appearance } from '../types'
-
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 type ChatBubble = {
    role: "assistant" | "user",
    text: string
@@ -53,7 +54,7 @@ export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
               </div>
           ) : null}
           <div
-              className={`dmd-flex dmd-flex-row dmd-py-2 dmd-px-3  dmd-gap-2 dmd-max-w-[70%] ${
+              className={`dmd-flex dmd-flex-col dmd-py-2 dmd-px-3 dmd-text-[14px]  dmd-gap-2 dmd-max-w-[80%] [&>ol]:dmd-list-decimal dmd-list dmd-list-inside [&>ol]:dmd-pl-4 ${
                   role === 'assistant'
                       ? 'dmd-rounded-tl-md dmd-rounded-br-md dmd-rounded-tr-md dmd-text-black dmd-bg-slate-300 dark:dmd-bg-[#4c5152] dark:dmd-text-white'
                       : 'dmd-rounded-tl-md dmd-rounded-bl-md dmd-rounded-tr-md dmd-self-end '
@@ -64,7 +65,10 @@ export const ChatBubble: FC<ChatBubble> = ({role, text, appearance}) => {
                   color: appearance.textColor,
               }}
           >
-              <p className="dmd-text-sm">{text}</p>
+            
+                <Markdown remarkPlugins={[remarkGfm]}>
+                    {text}
+                </Markdown>
           </div>
       </div>
   );

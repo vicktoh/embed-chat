@@ -6,6 +6,9 @@ export default ({ mode}) => {
   // @ts-ignore;
   process.env = {...process.env, ... loadEnv(mode, process.cwd())}
   return defineConfig({
+    server: {
+      port: 3006
+    },
     plugins: [react(), cssInjectedByJsPlugin()],
     build: {
       cssCodeSplit: false,

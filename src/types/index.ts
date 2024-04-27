@@ -3,6 +3,7 @@
 export type Appearance = {
    brandColor: string,
    textColor?: string,
+   chatBG?: string,
    title: string,
    description: string;
    defaultMessage: string;

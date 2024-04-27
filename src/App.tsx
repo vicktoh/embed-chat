@@ -25,14 +25,14 @@ function App({apiKey}: {apiKey:string}) {
              <ChatPane apiKey={apiKey} appearance={appearance} show={show} onToggleShow={()=> setShow(false)}/>
              <div
                  style={{
-                     backgroundColor: appearance.brandColor,
+                     backgroundColor: appearance.chatBG,
                      color: appearance.textColor,
                  }}
                  className="dmd-w-[56px] dmd-h-[56px] dmd-rounded-full dmd-flex dmd-items-center dmd-justify-center dmd-cursor-pointer "
                  onClick={() => setShow((val) => !val)}
              >
-                 {show ? (
-                     <svg
+                    <div className={`transition-all ${show ? 'hidden': ''}`} style={{display: !show ? "none": "block"}}>
+                        <svg
                          xmlns="http://www.w3.org/2000/svg"
                          width="24"
                          height="24"
@@ -47,19 +47,21 @@ function App({apiKey}: {apiKey:string}) {
                          <path d="M18 6 6 18" />
                          <path d="m6 6 12 12" />
                      </svg>
-                 ) : (
-                     <>
+                    </div>
+                     
+                     <div className={`transition-all ${!show? 'hidden': ''}`} style={{display: show ? "none": "block"}}>
                          {appearance.icon === 'circle' ||
                          appearance.icon === 'square' ? (
                              Icons[appearance.icon].big
                          ) : (
                              <img
+                                 width={56}
+                                 height={56}
                                  src={appearance.icon}
                                  className="dmd-w-10 dmd-h-10 dmd-rounded-full"
                              />
                          )}
-                     </>
-                 )}
+                     </div>
              </div>
          </div>
      ) : null;
