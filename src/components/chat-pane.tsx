@@ -106,7 +106,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
     }, [chat, fetchChat]);
     return (
         <div
-            className={`dmd-fixed dmd-z-auto dmd-border dmd-left-[10px] md:dmd-left-[auto]  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg  md:dmd-w-[400px] dmd-bottom-[10px] md:dmd-bottom-[70px] dmd-right-[10px] md:dmd-right-[120px] dmd-top-2 md:dmd-top-[auto] md:dmd-min-h-[75vh]`}
+            className={`dmd-fixed dmd-z-auto  dmd-shadow-lg dmd-left-[10px] md:dmd-left-[auto]  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg  md:dmd-w-[400px] dmd-bottom-[10px] md:dmd-bottom-[70px] dmd-right-[10px] md:dmd-right-[120px] dmd-top-2 md:dmd-top-[auto] md:dmd-min-h-[75vh]`}
             style={{ display: show ? 'block' : 'none' }}
         >
             <div className="dmd-h-full md:dmd-min-h-[75vh]  dmd-relative">
@@ -164,9 +164,9 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                 
 
             </div>
-            <div className="dmd-absolute dmd-bottom-0 dmd-right-0 dmd-left-0">
+            <div className="dmd-absolute dmd-bottom-0 dmd-right-0 dmd-left-0  dmd-pt-5 dmd-pb-2">
 
-                <div className="dmd-flex  dmd-bg-white dark:dmd-bg-slate-800 dmd-flex-row dmd-items-center dmd-relative dmd-py-5 dmd-px-4 dmd-rounded-b-lg dmd-mt-auto">
+                <div className="dmd-flex  dmd-bg-white dark:dmd-bg-slate-800 dmd-flex-row dmd-items-center  dmd-relative dmd-px-4 dmd-rounded-b-lg dmd-mt-auto">
                     <input
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
@@ -185,6 +185,8 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                         Send
                     </button>
                 </div>
+            <p className="dmd-text-[10px] dmd-text-center dmd-text-slate-400 dmd-mt-1">Made with ❤️ <a className='dmd-font-bold' href="https:/supportbuddyai.com dmd-text-primary" style={{color: appearance.brandColor}}>SupportBuddyAI</a></p>
+
                 </div>
             </div>
 
