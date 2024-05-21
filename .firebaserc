@@ -1,18 +1,5 @@
 {
   "projects": {
-    "default": "dumbledoreai-marketing"
-  },
-  "targets": {
-    "dumbledoreai-marketing": {
-      "hosting": {
-        "dumbledoreai-marketing": [
-          "dumbledore-embed-chat"
-        ],
-        "dumbledore-embed-chat": [
-          "dumbledoreai-marketing"
-        ]
-      }
-    }
-  },
-  "etags": {}
+    "default": "support-buddy-embed"
+  }
 }

@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "target": "dumbledore-embed-chat",
     "public": "dist/assets",
     "ignore": [
       "firebase.json",

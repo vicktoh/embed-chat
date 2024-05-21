@@ -30,17 +30,17 @@ export const call = async <R=object>(path: string, apiKey:string, body?: object)
   return data;
 }
 export const startNewChat =  async (apiKey: string, message?: {role: string, content: string} []) => {
-   const path = `${BASE_URL}/newchat`;
+   const path = env === 'prod' ? `https://newchat-${BASE_URL}`: `${BASE_URL}/newchat`;
    return call(path, apiKey, message ? {message}: undefined);
 }
 
 export const sendMessage = async (chatId: string, message: string, apiKey:string) => {
-   const path = `${BASE_URL}/converse`;
+   const path =env === 'prod' ? `https://converse-${BASE_URL}`: `${BASE_URL}/converse`;
    return call<ThreadMessage[]>(path, apiKey, {chatId, message});
 }
 
 export const listMessage = async (chatId: string, apiKey: string) => {
-   const path = `${BASE_URL}/list-message`;
+   const path =env === 'prod' ? `https://list-message-${BASE_URL}`: `${BASE_URL}/list-message`;
    return call(path, apiKey, {chatId});
 }
 

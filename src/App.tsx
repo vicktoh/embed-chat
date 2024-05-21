@@ -4,10 +4,11 @@ import { Appearance } from './types';
 import { ChatPane } from './components/chat-pane';
 import { Icons } from './assets/chatsquare';
 import { listenOnAppearance } from './api/firebase';
+import useScreenSize from './api/useScreenSize';
 function App({apiKey}: {apiKey:string}) {
   const [show, setShow] = useState<boolean>(false);
   const [appearance, setAppearance] = useState<Appearance>();
-
+  const screenSize = useScreenSize();
 
   useEffect(() => {
     const unsub = listenOnAppearance(apiKey, (appearance)=> {
@@ -15,6 +16,14 @@ function App({apiKey}: {apiKey:string}) {
     });
     return unsub
   }, [apiKey])
+  useEffect(()=> {
+    if(show && screenSize.width < 640 && document.body.style.overflow !== 'hidden'){
+         document.body.style.overflow = 'hidden';
+    }
+    if(!show && screenSize.width < 640){
+        document.body.style.overflow = 'initial';
+    }
+  }, [show, screenSize.width])
    
      return appearance ? (
          <div

@@ -11,7 +11,6 @@ type ChatPaneProps = {
 };
 export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggleShow }) => {
     const [chat, setChat] = useState<Chat>();
-    const [fetchingChat, setFetchingChat] = useState<boolean>();
     const [chats, setChats] = useState<ThreadMessage[]>([]);
     const [loading, setLoading] = useState(false);
     const [userInput, setUserInput] = useState('');
@@ -37,7 +36,9 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                 },
             ]);
             if (!chat?.id) {
-                const chat = (await startNewChat(apiKey)) as Chat;
+                const chat = (await startNewChat(apiKey, [
+                    { content: appearance.defaultMessage, role: 'assistant' },
+                ])) as Chat;
 
                 console.log(chat, 'Chat retrived true');
                 setChat(chat);
@@ -54,7 +55,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
             setLoading(false);
         }
     };
-    console.log(chats, "🍅")
+    
 
     const handleOnKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
         if(event.key === 'Enter') {
@@ -70,43 +71,31 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
         }
     }, [chats]);
     const fetchChat = useCallback(async () => {
-        try {
-            setChats([])
-            setFetchingChat(true);
-            const newchat = (await startNewChat(apiKey, [
-                { content: appearance.defaultMessage, role: 'assistant' },
-            ])) as Chat;
-            setChats((value) => [
-                ...value,
-                {
-                    content: [
-                        {
-                            type: 'text',
-                            text: {
-                                value: appearance.defaultMessage,
-                                annotations: [],
-                            },
-                        },
-                    ],
-                    role: 'assistant',
-                },
-            ]);
-            setChat(newchat);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setFetchingChat(false);
-        }
-    }, [apiKey, appearance.defaultMessage]);
-    useEffect(() => {
-        if (!chat?.id){
-            fetchChat();
-        } 
-
-    }, [chat, fetchChat]);
+        setChats(() => [
+        
+            {
+                content: [
+                    {
+                        type: 'text',
+                        text: { value: appearance.defaultMessage, annotations: [] },
+                    },
+                ],
+                role: 'assistant',
+            },
+        ]);
+    }, [appearance.defaultMessage]);
+  useEffect(()=> {
+    if(!chats.length){
+        fetchChat()
+    }
+  }, [fetchChat, chats])
+  const newChat = ()=> {
+    setChat(undefined),
+    setChats([]);
+  }
     return (
         <div
-            className={`dmd-fixed dmd-z-auto  dmd-shadow-lg dmd-left-[10px] md:dmd-left-[auto]  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg  md:dmd-w-[400px] dmd-bottom-[10px] md:dmd-bottom-[70px] dmd-right-[10px] md:dmd-right-[120px] dmd-top-2 md:dmd-top-[auto] md:dmd-min-h-[75vh]`}
+            className={`dmd-fixed dmd-z-50  dmd-shadow-lg dmd-left-[0px] md:dmd-left-[auto]  dmd-bg-white dark:dmd-bg-slate-800 dmd-border-slate-400 dmd-rounded-lg  md:dmd-w-[400px] dmd-bottom-[0px] md:dmd-bottom-[70px] dmd-right-[0px] md:dmd-right-[120px] dmd-top-0 md:dmd-top-[auto] md:dmd-min-h-[75vh]`}
             style={{ display: show ? 'block' : 'none' }}
         >
             <div className="dmd-h-full md:dmd-min-h-[75vh]  dmd-relative">
@@ -134,10 +123,9 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                             background: appearance.brandColor,
                             color: appearance.textColor,
                         }}
-                        onClick={fetchChat}
-                        disabled={fetchingChat}
+                        onClick={newChat}
                     >
-                        {fetchingChat ? 'Please wait...' : 'New Chat'}
+                        {'New Chat'}
                     </button>
                 </div>
                 <button className="md:dmd-hidden dmd-text-black dmd-border-black dmd-flex dmd-items-center dmd-justify-center dmd-rounded-full dmd-absolute dmd-right-3 dmd-top-3 dmd-w-5 dmd-h-5 dmd-border" onClick={onToggleShow}>

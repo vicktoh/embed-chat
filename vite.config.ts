@@ -16,9 +16,6 @@ export default ({ mode}) => {
         input: {
           app: "./src/main.tsx",
         },
-        output:{
-          assetFileNames:"assets/chat-widget.js"
-        }
       }
     }
   })
