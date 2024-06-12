@@ -2,7 +2,7 @@ import { FC, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'rea
 import { Appearance, Chat, ThreadMessage } from '../types';
 import { ChatBubble } from './chat-bubble';
 import { LoadingBubble } from './loading-bubble';
-import { sendMessage, startNewChat } from '../api/chat';
+import {  listMessage, startNewChat, streamChat } from '../api/chat';
 type ChatPaneProps = {
     apiKey: string;
     appearance: Appearance;
@@ -13,54 +13,125 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
     const [chat, setChat] = useState<Chat>();
     const [chats, setChats] = useState<ThreadMessage[]>([]);
     const [loading, setLoading] = useState(false);
+    const [streaming, setStreaming] = useState(false);
+    const [streamInput, setStreamInput] = useState('')
     const [userInput, setUserInput] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
     const endRef = useRef<HTMLDivElement>(null);
+    const addTextToChat = (text:string, role:ThreadMessage["role"]="user" ) => {
+        setChats((value) => [
+            ...value,
+            {
+                content: [
+                    {
+                        type: 'text',
+                        text: { value: text, annotations: [] },
+                    },
+                ],
+                role: role,
+            },
+        ]);
+    }
+    console.log(chat)
+    const refreshMessage = useCallback(
+      async () => {
+        if(!chat?.id) return;
+        const messages = await listMessage(chat?.id, apiKey)
+        messages.push({
+            content: [
+                {
+                    type: 'text',
+                    text: { value: appearance.defaultMessage, annotations: [] },
+                },
+            ],
+            role: 'assistant',
+        })
+        setChats(messages.reverse());
+      },
+      [chat, apiKey, appearance.defaultMessage],
+    )
+    
+    // const sendChatMessage = async () => {
+    //     if (!userInput.trim()) return;
+    //     const input = userInput.trim();
+    //     setUserInput('');
+    //     addTextToChat(input)
+    //     try {
+    //         setLoading(true);
+            
+    //         if (!chat?.id) {
+    //             const chat = (await startNewChat(apiKey, [
+    //                 { content: appearance.defaultMessage, role: 'assistant' },
+    //             ])) as Chat;
 
-    const sendChatMessage = async () => {
+    //             setChat(chat);
+    //             const chats = await sendMessage(chat.id, input, apiKey);
+    //             setChats(chats.reverse());
+    //             return;
+    //         }
+    //         const chats = await sendMessage(chat.id, input, apiKey);
+    //         setChats(chats.reverse());
+    //     } catch (error) {
+    //         console.log(error, 'error ❌');
+    //     } finally {
+    //         setUserInput('');
+    //         setLoading(false);
+    //     }
+    // };
+    const messageStream = async () => {
         if (!userInput.trim()) return;
         const input = userInput.trim();
         setUserInput('');
+        
+        addTextToChat(input)
         try {
             setLoading(true);
-            setChats((value) => [
-                ...value,
-                {
-                    content: [
-                        {
-                            type: 'text',
-                            text: { value: input, annotations: [] },
-                        },
-                    ],
-                    role: 'user',
-                },
-            ]);
+            let reqChat: Chat | null = null
             if (!chat?.id) {
-                const chat = (await startNewChat(apiKey, [
+                 reqChat = (await startNewChat(apiKey, [
                     { content: appearance.defaultMessage, role: 'assistant' },
                 ])) as Chat;
-
-                console.log(chat, 'Chat retrived true');
-                setChat(chat);
-                const chats = await sendMessage(chat.id, input, apiKey);
-                setChats(chats.reverse());
-                return;
+                setChat(reqChat);
+                 
+                
+               
+            } else{
+                reqChat = chat
             }
-            const chats = await sendMessage(chat.id, input, apiKey);
-            setChats(chats.reverse());
+            setStreamInput('')
+            await streamChat(
+                { chatId: reqChat.id, message: input, apiKey },
+                (token) => {
+                    setStreaming(true);
+                    setStreamInput((message) => message + token);
+                },
+                (message) => {
+                    message && addTextToChat(message, 'assistant')
+                    refreshMessage();
+                    setStreaming(false);
+                    setLoading(false);
+                },
+                (error) => {
+                    console.log('Error', error);
+                    setStreaming(false);
+                    setLoading(false);
+                }
+            );
+            
         } catch (error) {
             console.log(error, 'error ❌');
+            setLoading(false);
         } finally {
             setUserInput('');
-            setLoading(false);
+            
         }
-    };
+    }
     
 
     const handleOnKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
         if(event.key === 'Enter') {
             console.log("Enter Pressed");
-            sendChatMessage();
+            messageStream();
             
         }
     }
@@ -69,7 +140,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
             endRef.current &&
                 endRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [chats]);
+    }, [chats, streamInput]);
     const fetchChat = useCallback(async () => {
         setChats(() => [
         
@@ -90,6 +161,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
     }
   }, [fetchChat, chats])
   const newChat = ()=> {
+    setStreamInput('')
     setChat(undefined),
     setChats([]);
   }
@@ -128,13 +200,17 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                         {'New Chat'}
                     </button>
                 </div>
-                <button className="md:dmd-hidden dmd-text-black dmd-border-black dmd-flex dmd-items-center dmd-justify-center dmd-rounded-full dmd-absolute dmd-right-3 dmd-top-3 dmd-w-5 dmd-h-5 dmd-border" onClick={onToggleShow}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                <button style={{
+                            background: appearance.brandColor,
+                            color: appearance.textColor,
+                            borderColor: appearance.textColor
+                        }} className="md:dmd-hidden  dmd-flex dmd-items-center dmd-justify-center dmd-rounded-full dmd-absolute dmd-right-3 dmd-top-3 dmd-w-5 dmd-h-5 dmd-border" onClick={onToggleShow}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
             </div>
             <div className=" dmd-flex dmd-flex-col dmd-flex-1  dmd-relative   dmd-rounded-b-lg dmd-pt-5">
                 <div
-                    className="dmd-flex dmd-flex-col dmd-h-[calc(100vh-90px-158px-18px)] md:dmd-h-[calc(75vh-90px-158px)]  dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4 dmd-pb-10"
+                    className="dmd-flex dmd-flex-col dmd-h-[calc(100dvh-90px-158px-18px)] md:dmd-h-[calc(75vh-90px-158px)]  dmd-overflow-y-auto dmd-overflow-x-hidden dmd-px-4 dmd-pb-10"
                     ref={containerRef}
                 >
                     {chats.map((chat, id) => (
@@ -146,7 +222,8 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                             text={chat.content[0].text.value}
                         />
                     ))}
-                    {loading && <LoadingBubble appearance={appearance} />}
+                    {loading && !streaming && <LoadingBubble appearance={appearance} />}
+                    {streaming && streamInput && <ChatBubble key={`dumbledore-chat-stream`} timestamp={100} appearance={appearance} role="assistant" text={streamInput} />}
                     <div ref={endRef}></div>
                 </div>
                 
@@ -163,7 +240,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                         onKeyUp={handleOnKeyUp}
                     />
                     <button
-                        onClick={sendChatMessage}
+                        onClick={messageStream}
                         className={`dmd-absolute dmd-right-5 dmd-rounded-md dmd-py-1 dmd-px-4 dmd-border-1`}
                         style={{
                             backgroundColor: appearance.brandColor,

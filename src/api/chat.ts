@@ -12,6 +12,7 @@ const ErroCodeMap: Record<number, string> = {
 }
 const BASE_URL = env === 'dev' ? dev_url : prod_url;
 
+console.log(BASE_URL, env, "🌹")
 
 export const call = async <R=object>(path: string, apiKey:string, body?: object): Promise<R> =>{
    const res = await fetch(path, {
@@ -38,10 +39,48 @@ export const sendMessage = async (chatId: string, message: string, apiKey:string
    const path =env === 'prod' ? `https://converse-${BASE_URL}`: `${BASE_URL}/converse`;
    return call<ThreadMessage[]>(path, apiKey, {chatId, message});
 }
+export const streamChat = async (
+   conversationRequest: {chatId: string, message: string, apiKey:string },
+   onReceiveChunk :(chunk: string) =>void,
+   onEnd: (fullChunk?:string) => void, 
+   onError: (message: string) => void,
+   ) => {
+       const path =env === 'prod' ? `https://streamConverse-${BASE_URL}`: `${BASE_URL}/streamConverse`;
+       const response = await fetch(path, {
+           method: 'POST',
+           headers:{
+               'Content-Type': 'application/json',
+               // 'Authorization': 'Bearer ' + message: string
+           },
+           body: JSON.stringify(conversationRequest),
+       })
+       if(!response.ok){
+           onError(response.statusText)
+           return;
+       }
+       let chunks = "";
+       const reader = response.body?.getReader();
+       while (true && reader) {
+         const { done, value } = await reader?.read() || {};
+         const fullMessage = new TextDecoder().decode(value);
+         
+         
+         if (done) {
+           break;
+         }
+
+         onReceiveChunk(fullMessage);
+
+         chunks += (fullMessage);
+       }
+       onEnd(chunks);
+       console.log("done for real")
+      return
+   }
 
 export const listMessage = async (chatId: string, apiKey: string) => {
-   const path =env === 'prod' ? `https://list-message-${BASE_URL}`: `${BASE_URL}/list-message`;
-   return call(path, apiKey, {chatId});
+   const path =env === 'prod' ? `https://listMessage-${BASE_URL}`: `${BASE_URL}/listMessage`;
+   return call<ThreadMessage[]>(path, apiKey, {chatId});
 }
 
 export const defaultAppearance: Appearance = {
