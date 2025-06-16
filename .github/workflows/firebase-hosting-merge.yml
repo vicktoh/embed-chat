@@ -15,6 +15,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DUMBLEDOREAI_MARKETING }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SUPPORT_BUDDY_EMBED }}
           channelId: live
-          projectId: dumbledoreai-marketing
+          projectId: support-buddy-embed

@@ -16,12 +16,15 @@ export type Chat = {
    id: string;
    createdAt: string;
 }
-
+export type Annotation = {
+   type: 'file_citation' | 'file_path',
+   text: string,
+}
 export type ThreadMessage = {
    id?: string;
    created_at?: number,
    role: "user" | "assistant",
-   content: [{type: string, text: { value: string, annotations: object[]}}]
+   content: [{type: string, text: { value: string, annotations: Annotation[]}}]
 }
 
 

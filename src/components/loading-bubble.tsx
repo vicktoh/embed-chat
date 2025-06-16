@@ -10,7 +10,10 @@ export const LoadingBubble:FC<LoadingBubbleProps> = ({appearance}) => {
 >
 <div
            className="dmd-w-8 dmd-h-8 dmd-self-start dmd-flex dmd-justify-center dmd-items-center dmd-rounded-full"
-           style={{ backgroundColor: appearance?.brandColor }}
+           style={{
+            backgroundColor: appearance?.brandColor,
+            color: appearance.textColor,
+        }}
        >
            <svg
                xmlns="http://www.w3.org/2000/svg"
@@ -19,9 +22,9 @@ export const LoadingBubble:FC<LoadingBubbleProps> = ({appearance}) => {
                viewBox="0 0 24 24"
                fill="none"
                stroke="currentColor"
-               stroke-width="2"
-               stroke-linecap="round"
-               stroke-linejoin="round"
+               strokeWidth="2"
+               strokeLinecap="round"
+               strokeLinejoin="round"
                className="lucide lucide-message-circle-more"
            >
                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
