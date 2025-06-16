@@ -2,7 +2,7 @@ import { FC, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'rea
 import { Appearance, Chat, ThreadMessage } from '../types';
 import { ChatBubble } from './chat-bubble';
 import { LoadingBubble } from './loading-bubble';
-import {  listMessage, startNewChat, streamChat } from '../api/chat';
+import {  startNewChat, streamChat } from '../api/chat';
 type ChatPaneProps = {
     apiKey: string;
     appearance: Appearance;
@@ -32,24 +32,32 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
             },
         ]);
     }
-    console.log(chat)
-    const refreshMessage = useCallback(
-      async () => {
-        if(!chat?.id) return;
-        const messages = await listMessage(chat?.id, apiKey)
-        messages.push({
-            content: [
-                {
-                    type: 'text',
-                    text: { value: appearance.defaultMessage, annotations: [] },
-                },
-            ],
-            role: 'assistant',
+    // console.log(chat)
+    // const refreshMessage = useCallback(
+    //   async () => {
+    //     if(!chat?.id) return;
+    //     const messages = await listMessage(chat?.id, apiKey)
+    //     messages.push({
+    //         content: [
+    //             {
+    //                 type: 'text',
+    //                 text: { value: appearance.defaultMessage, annotations: [] },
+    //             },
+    //         ],
+    //         role: 'assistant',
+    //     })
+    //     setChats(messages.reverse());
+    //   },
+    //   [chat, apiKey, appearance.defaultMessage],
+    // )
+    const replaceAnnotations = (message: ThreadMessage) => {
+        const message_content = message.content[0].text
+        let message_text = message_content.value;
+        message_content.annotations.forEach((val) => {
+           message_text = message_text.replace(val.text, '');
         })
-        setChats(messages.reverse());
-      },
-      [chat, apiKey, appearance.defaultMessage],
-    )
+        return message_text
+    }
     
     // const sendChatMessage = async () => {
     //     if (!userInput.trim()) return;
@@ -107,7 +115,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                 },
                 (message) => {
                     message && addTextToChat(message, 'assistant')
-                    refreshMessage();
+                    // refreshMessage();
                     setStreaming(false);
                     setLoading(false);
                 },
@@ -219,7 +227,7 @@ export const ChatPane: FC<ChatPaneProps> = ({ appearance, show, apiKey, onToggle
                             timestamp={1000}
                             appearance={appearance}
                             role={chat.role}
-                            text={chat.content[0].text.value}
+                            text={replaceAnnotations(chat)}
                         />
                     ))}
                     {loading && !streaming && <LoadingBubble appearance={appearance} />}

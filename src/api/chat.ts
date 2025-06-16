@@ -45,7 +45,7 @@ export const streamChat = async (
    onEnd: (fullChunk?:string) => void, 
    onError: (message: string) => void,
    ) => {
-       const path =env === 'prod' ? `https://streamConverse-${BASE_URL}`: `${BASE_URL}/streamConverse`;
+       const path =env === 'prod' ? `https://streamChatWeb-${BASE_URL}`: `${BASE_URL}/streamChatWeb`;
        const response = await fetch(path, {
            method: 'POST',
            headers:{
